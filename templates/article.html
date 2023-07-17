@@ -17,6 +17,11 @@
         .article-card {
             margin-bottom: 30px;
         }
+
+        table {
+            margin: 0 auto;
+            margin-top: 10px;
+        }
     </style>
     <title>{{ article.title }}</title>
 </head>
@@ -33,6 +38,12 @@
                 <h4 class="card-subtitle mb-2 text-muted">By: {{ article.author }} on {{
                     article.date_posted.strftime('%B %d, %Y') }}</h4>
                 <p class="card-text">{{ article.content }}</p>
+
+                <h2>Stock Data</h2>
+                <table>
+                    {{ df.to_html(classes='data')|safe }}
+                </table>
+
                 <a href="/" class="btn btn-secondary">Go Back</a>
             </div>
         </div>

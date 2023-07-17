@@ -1,0 +1,10 @@
+langchain
+flask
+flask-sqlalchemy
+langchain
+openai
+pandas
+python-dotenv
+sqlalchemy
+gunicorn
+psycopg2-binary
