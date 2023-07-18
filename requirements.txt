@@ -8,3 +8,4 @@ python-dotenv
 sqlalchemy
 gunicorn
 psycopg2-binary
+yfinance
