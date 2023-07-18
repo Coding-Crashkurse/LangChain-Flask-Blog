@@ -1,19 +1,16 @@
-import os
 from datetime import datetime, timedelta
-
-import pandas as pd
-import yfinance as yf
-from dotenv import find_dotenv, load_dotenv
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from langchain.chains import LLMChain
-from langchain.llms import OpenAI
-from langchain.prompts import ChatPromptTemplate
+import pandas as pd
+import yfinance as yf
 
-DATABASE_URI = f"postgres://{os.environ['POSTGRES_USER']}:{os.environ['POSTGRES_PASSWORD']}@db:5423/{os.environ['POSTGRES_DB']}"
+from langchain.prompts import ChatPromptTemplate
+from langchain.llms import OpenAI
+from langchain.chains import LLMChain
+from dotenv import load_dotenv, find_dotenv
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URI
+app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://user:password@db:5432/dbname"
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
@@ -75,11 +72,13 @@ class StockDataAnalyzer:
         return self.chain.predict(data=data)
 
 
-from contextlib import contextmanager
+from sqlalchemy.exc import SQLAlchemyError
+
 
 from sqlalchemy import create_engine, text
-from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.exc import SQLAlchemyError
+from contextlib import contextmanager
 
 
 class ArticleDatabase:
@@ -143,7 +142,10 @@ if __name__ == "__main__":
 
     fetcher = StockDataFetcher(tickers)
     analyzer = StockDataAnalyzer()
-    db = ArticleDatabase(db_url=DATABASE_URI)
+
+    db_url = "postgresql://user:password@db:5432/dbname"
+
+    db = ArticleDatabase(db_url=db_url)
 
     stock_data = fetcher.fetch()
     analysis = analyzer.analyze(stock_data)
