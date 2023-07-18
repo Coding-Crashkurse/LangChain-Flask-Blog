@@ -1,9 +1,10 @@
+import os
+from datetime import datetime
+
+import pandas as pd
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
-import os
 from sqlalchemy.orm import joinedload
-import pandas as pd
 
 app = Flask(__name__)
 

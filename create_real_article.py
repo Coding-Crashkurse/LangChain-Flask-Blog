@@ -1,13 +1,14 @@
+import os
 from datetime import datetime, timedelta
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
+
 import pandas as pd
 import yfinance as yf
-
-from langchain.prompts import ChatPromptTemplate
-from langchain.llms import OpenAI
+from dotenv import find_dotenv, load_dotenv
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 from langchain.chains import LLMChain
-from dotenv import load_dotenv, find_dotenv
+from langchain.llms import OpenAI
+from langchain.prompts import ChatPromptTemplate
 
 DATABASE_URI = f"postgres://{os.environ['POSTGRES_USER']}:{os.environ['POSTGRES_PASSWORD']}@db:5423/{os.environ['POSTGRES_DB']}"
 
@@ -74,13 +75,11 @@ class StockDataAnalyzer:
         return self.chain.predict(data=data)
 
 
-from sqlalchemy.exc import SQLAlchemyError
-
+from contextlib import contextmanager
 
 from sqlalchemy import create_engine, text
-from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import SQLAlchemyError
-from contextlib import contextmanager
+from sqlalchemy.orm import sessionmaker
 
 
 class ArticleDatabase:
@@ -144,11 +143,7 @@ if __name__ == "__main__":
 
     fetcher = StockDataFetcher(tickers)
     analyzer = StockDataAnalyzer()
-    db_host = "db"  # as specified in your Docker Compose file
-
-    db_url = "postgresql://user:password@db:5432/dbname"
-
-    db = ArticleDatabase(db_url=db_url)
+    db = ArticleDatabase(db_url=DATABASE_URI)
 
     stock_data = fetcher.fetch()
     analysis = analyzer.analyze(stock_data)
